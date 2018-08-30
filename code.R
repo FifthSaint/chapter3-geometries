@@ -71,13 +71,47 @@ ggplot(diamonds, aes(x = carat, y = price)) +
 
 
 
-
-
-
-
-
-
-
 #------------------------------------------------
 # Line Plots
 #------------------------------------------------
+df_temp <- read_csv("data/line_temp.csv")
+
+# 1960년과 1994년 추출
+df_temp <- df_temp %>% 
+  filter(year == 1994, category == "max_temp" | category == "min_temp")
+
+ggplot(df_temp, aes(x = dates, y = value)) +
+  geom_line() 
+
+# 선의 색으로 구분
+ggplot(df_temp, aes(x = dates, y = value, color = category)) +
+  geom_line() +
+  ylim(0, 40)
+
+# 선의 타입으로 구분
+ggplot(df_temp, aes(x = dates, y = value, linetype = category)) +
+  geom_line() +
+  ylim(0, 40)
+
+# 나만의 색을 만들어보자
+my_color <- c("#7F44F7", "#FDAC44")
+
+# 응용해서 라인그래프를 만들어보자
+ggplot(df_temp, aes(x = dates, y = value, color = category)) +
+  geom_line() +
+  ylim(0, 40) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_manual(values = my_color)
+
+
+#------------------------------------------------
+# Line Plots의 응용 geom_area
+#------------------------------------------------
+ggplot(df_temp, aes(x = dates, y = value, fill = category)) +
+  geom_ribbon(aes(ymin = 0, ymax = value), alpha = 0.5) +
+  ylim(0, 40)
+
+ggplot(df_temp, aes(x = dates, y = value, color = category)) +
+  geom_area(alpha = 0.2, position = "dodge") +
+  ylim(0, 40)
